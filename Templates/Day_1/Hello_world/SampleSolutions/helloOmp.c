@@ -12,7 +12,7 @@ int main()
       
 #ifdef _OPENMP
       printf("Hello, I am thread %i of %i\n", 
-	     get_omp_thread_num(), get_omp_num_threads());
+	     omp_get_thread_num(), omp_get_num_threads());
 #else
       printf("Hello from serial!\n");
 #endif
