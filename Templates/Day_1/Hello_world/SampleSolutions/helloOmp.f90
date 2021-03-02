@@ -4,9 +4,10 @@ PROGRAM Parallel_Hello_World
 
   implicit none
   
-  logical parallel_omp = .false.
+  logical parallel_omp
   integer threadid, threadnum
-  
+
+  parallel_omp = .false.
   !$ parallel_omp = .true.
   
   !$OMP PARALLEL
