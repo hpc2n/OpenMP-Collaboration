@@ -1,10 +1,26 @@
 PROGRAM Parallel_Hello_World
-USE OMP_LIB
 
-!$OMP PARALLEL
+  !$ USE OMP_LIB
 
-PRINT *, "Thread ID: ", OMP_GET_THREAD_NUM(), " says Hello World"
+  implicit none
+  
+  logical parallel_omp = .false.
+  integer threadid, threadnum
+  
+  !$ parallel_omp = .true.
+  
+  !$OMP PARALLEL
 
-!$OMP END PARALLEL
+  !$ threadid  = omp_get_num_threads()
+  !$ threadnum = omp_get_thread_num()
 
-END
+  if (.not.parallel_omp) then
+     threadid  = 0
+     threadnum = 1
+  endif
+  
+  PRINT *, "Hello, I am thread", threadid, " out of", threadnum 
+
+  !$OMP END PARALLEL
+
+END PROGRAM Parallel_Hello_World
