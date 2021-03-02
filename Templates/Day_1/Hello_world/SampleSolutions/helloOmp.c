@@ -9,19 +9,13 @@ int main()
 #pragma omp parallel
     {
       int threadid, threadnum, procnum;
+      
 #ifdef _OPENMP
-      threadid  = omp_get_thread_num();
-      threadnum = omp_get_num_threads();
-      procnum   = omp_get_num_procs();
-#else
-      threadnum = 1;
-      threadid = 0;
-#endif
-      
-      
-      printf("Hello, I am thread %i of %i - we have %i procs\n", 
+      printf("Hello, I am thread %i of %i\n", 
 	     threadid, threadnum, procnum);
-      
+#else
+      printf("Hello from serial!\n");
+#endif
     }
   
   return 0;
