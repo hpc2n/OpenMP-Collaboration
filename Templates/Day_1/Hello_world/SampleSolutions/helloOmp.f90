@@ -11,7 +11,7 @@ PROGRAM Parallel_Hello_World
   
   !$OMP PARALLEL
   
-  PRINT *, "Hello, I am thread", omp_get_thread_num(), " out of", omp_get_num_threads()
+  !$ PRINT *, "Hello, I am thread", omp_get_thread_num(), " out of", omp_get_num_threads()
 
   !$OMP END PARALLEL
 
