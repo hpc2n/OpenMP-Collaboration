@@ -4,19 +4,17 @@ Using polar coordinates it can be shown
 \begin{equation}
 \int_{-\infty}^\infty \int_{-\infty}^\infty \exp(-(x^2 +y^2)) dx dy = \pi
 \end{equation}
-The double integral on the left hand side can, using the symmetries available be approximated by
+For sufficiently large $N$ and sufficiently small $h$ the double integral on the left hand side can be approximated as
 \begin{equation}
-\lim_{h\to0}\lim_{N\to\infty}\left[
 8\sum_{i=0}^{N-1}\sum_{j=i+1}^{N-1}
 h^2 \exp\left(-h^2 (i^2 + j^2)
-\right)\right]
+\right) \approx \pi
 \end{equation}
 Note that the second sum has its index starting at $i+1$ instead of 0.
 
 \subsubsection{Serial code}\label{triangularSumExercise_serial}
-In a first step you should 
-write a serial code to implement the above sum.
-Using $N=40000$ and $h=0.0002$ gives an estimate for $\pi$ which is 4 digit accurate.  Before proceeding, make sure you keep a copy of your serial code - we need it in a later exercise.
+We provide serial code in C and Fortran that implement the above sum.
+Using $N=40000$ and $h=0.0002$ gives an estimate for $\pi$ which is 4 digit accurate.  Before proceeding, make sure you keep a copy of the serial code.
 
 \subsubsection{OpenMP parallelisation}
 Once you have a working serial code, you should parallelise it using OpenMP.   This is best accomplished using the loop construct.  To achieve good performance, each thread should sum its contribution into a private variable and only in the end do a protected update to a shared variable for the final result. You might want to clean up your code that it compiles in serial and parallel.
