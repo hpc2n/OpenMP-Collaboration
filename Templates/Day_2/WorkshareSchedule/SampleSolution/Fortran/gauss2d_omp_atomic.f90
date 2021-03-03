@@ -32,6 +32,7 @@ Program gauss2d
      !$ if (omp_get_thread_num() .eq. 0) then
      !$    numThreads = omp_get_num_threads()     
      !$ endif
+     !$OMP end parallel
   else
      numThreads = 1
   endif
@@ -45,7 +46,7 @@ Program gauss2d
   !$OMP parallel default(none) shared(integral) &
   !$OMP    private(xpos, ypos, local_int, i, j)
   local_int = 0.0D0
-  !$OMP for schedule(static, 250)
+  !$OMP do schedule(static, 250)
   do i = 0, nsize-1
      xpos = i * stepsize
      do j = i+1, nsize-1
