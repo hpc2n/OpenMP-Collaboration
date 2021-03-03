@@ -28,7 +28,7 @@ int main()
     thread_num = omp_get_num_threads();
 
     my_num   = finval/thread_num;
-    my_first = thread_id * my_num;
+    my_first = 1 + thread_id * my_num;
     my_last  = (thread_id + 1) * my_num;
 
     local_pi = 0.0;
