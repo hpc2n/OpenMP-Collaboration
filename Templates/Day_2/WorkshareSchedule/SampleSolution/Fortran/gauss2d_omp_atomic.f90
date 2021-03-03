@@ -36,6 +36,8 @@ Program gauss2d
      numThreads = 1
   endif
 
+  integral = 0.0D0
+  
   ! start the timer
   !$ start_time = omp_get_wtime()
 
@@ -49,7 +51,7 @@ Program gauss2d
      do j = i+1, nsize-1
         ypos = j * stepsize
         local_int = local_int + &
-             stepsize*stepsize*exp(stepsize*stepsize*(xpos*xpos + ypos*ypos))
+             stepsize*stepsize*exp(-xpos*xpos - ypos*ypos)
      enddo  ! j-loop
   enddo     !i-loop
   
