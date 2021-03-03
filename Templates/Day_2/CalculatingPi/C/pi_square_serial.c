@@ -3,7 +3,7 @@
 int main()
 {
 
-  const int finval = 1000000000;
+  const int finval = 10000;
 
   double pi_square = 0.0;
 
