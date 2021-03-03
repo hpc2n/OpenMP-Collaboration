@@ -1,0 +1,16 @@
+\subsection{Exercise: Serial and threaded ``hello world'' code}
+In this exercise we write a parallel version of the World’s most famous application: ``\textit{Hello World}'' 
+
+\subsubsection{Serial code}\label{helloOMPexercise}
+Write a C or Fortran code that prints:
+\begin{quote}
+\verb+Hello world, I am a serial code!+
+\end{quote}
+Execute your codes using the job scheduler (batch system).
+
+\subsubsection{Parallel code}
+Now parallelise your code using OpenMP.  You should place a print statement inside a parallel region.  The thread number should be controlled with the appropriate environment variable.  Each thread should print its thread number and the total number of threads utilized concurrently.  For example thread number 2, when utilising a total of 4 threads should print
+\begin{quote}
+\verb+Hello world, I am thread 2 of 4 threads!+
+\end{quote}
+The parallel version of the code should still be able to compile serially and produce the same result as in exercise \ref{helloOMPexercise}.  To achieve this, you have to use C-preprocessor directives or the ``\verb+!$+''-sentinel.

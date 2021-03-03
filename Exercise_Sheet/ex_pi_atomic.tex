@@ -1,0 +1,24 @@
+\subsection{Exercise: Calculating Pi}
+It can be shown that:
+\begin{equation}
+\sum_{n=1}^N \frac{1}{n^2} \;\stackrel{N \to \infty}{\longrightarrow}
+\;\frac{\pi^2}{6}
+\end{equation}
+
+\subsubsection{Serial program}
+We provide serial template program in C and Fortran, which sum $1/n^2$ for a large value of $N$.  Experiment with different values of $N$ and make sure your result is correct.
+
+\subsubsection{Parallel program, manual work distribution}\label{PiManual}
+Make a copy of the serial template program (or write your own if you prefer) and parallelise it using the OpenMP construct \textit{parallel}.  
+
+In this exercise you should write the code (C or Fortran) to distribute the work onto the threads. That is, starting with the value of $N$, using the number of threads and the thread-id number, each thread should determine the $n$-range it is working on.  For this exercise it is ok, if you assume that $N$ is divisible by the thread count.  Also due to the complexity of this management code, it is ok if your parallel OpenMP version of the  code would not compile in serial.
+
+You will need to introduce additional variables.  Think carefully, which variables need to be declared as \texttt{shared} and which ones need to be declared as \texttt{private}.  We strongly encourage the use of a \verb+default(none)+ clause.  Please do not use any other declarations here.  In this exercise it is easy to create a \textit{data race}.  This has to be avoided while still maintaining high performance (minimise serialisation).
+
+Once the code is finished you should check that 
+\begin{enumerate}
+\item The parallel code is producing a correct results
+\item The results are independent of the thread count
+\item Introduce a timer into your code and experiment with different values of $N$.  Rerun you code with 1, 2, 4, 8, 16 and 28 threads.  For small values of $N$ you should notice that the code will run slower for larger thread counts, while for large values of $N$ it will run faster when more threads are used.
+\item \label{runtimePi} Do repeated runs of the same run. In particular when using all the threads per  node, do you get the same times.
+\end{enumerate}

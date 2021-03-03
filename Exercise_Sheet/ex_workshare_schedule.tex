@@ -1,0 +1,30 @@
+\subsection{Exercise: Summation over triangular area}\label{triangularSumExercise}
+
+Using polar coordinates it can be shown
+\begin{equation}
+\int_{-\infty}^\infty \int_{-\infty}^\infty \exp(-(x^2 +y^2)) dx dy = \pi
+\end{equation}
+The double integral on the left hand side can, using the symmetries available be approximated by
+\begin{equation}
+\lim_{h\to0}\lim_{N\to\infty}\left[
+8\sum_{i=0}^{N-1}\sum_{j=i+1}^{N-1}
+h^2 \exp\left(-h^2 (i^2 + j^2)
+\right)\right]
+\end{equation}
+Note that the second sum has its index starting at $i+1$ instead of 0.
+
+\subsubsection{Serial code}\label{triangularSumExercise_serial}
+In a first step you should 
+write a serial code to implement the above sum.
+Using $N=40000$ and $h=0.0002$ gives an estimate for $\pi$ which is 4 digit accurate.  Before proceeding, make sure you keep a copy of your serial code - we need it in a later exercise.
+
+\subsubsection{OpenMP parallelisation}
+Once you have a working serial code, you should parallelise it using OpenMP.   This is best accomplished using the loop construct.  To achieve good performance, each thread should sum its contribution into a private variable and only in the end do a protected update to a shared variable for the final result. You might want to clean up your code that it compiles in serial and parallel.
+\begin{itemize}
+\item Check that your results do not change when you use different thread numbers.
+\item Measure the performance.  Are you achieving good parallel speed up when using multiple threads?  Run your program using 1, 2, 4, 8 and 16 threads.
+\end{itemize}
+
+\subsubsection{Schedule}
+If you haven't specified a \verb+schedule+ clause, you should have observed that the speed-up on multiple processors was poor.  Specifying a schedule should improve the situation.  When using 16 threads, investigate the performance for a static schedule for a chunk size of 1, 10, 100, 1250, 2500.  Can you achieve better results using dynamic scheduling?
+
