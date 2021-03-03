@@ -2,7 +2,8 @@
 #include <omp.h>
 #include <math.h>
 
-#define NSIZE 40000
+// parameters N and h
+#define NSIZE 44800
 #define STEPSIZE 0.0002
 
 int main()
@@ -17,7 +18,7 @@ int main()
 #ifdef _OPENMP
 #pragma omp parallel default(none) shared(numThreads)
   {
-    #pragma omp master
+    if (omp_get_thread_num() == 0 )
     {
       numThreads = omp_get_num_threads();
     }
@@ -37,7 +38,7 @@ int main()
   private(xpos, ypos, local_int) shared(integral) 
   {
     local_int = 0.0;
-#pragma omp for schedule(dynamic,1000) 
+#pragma omp for schedule(static,250) 
     for ( int i = 0; i < NSIZE; i++)
       {
 

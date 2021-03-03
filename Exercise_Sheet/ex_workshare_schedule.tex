@@ -14,15 +14,15 @@ Note that the second sum has its index starting at $i+1$ instead of 0.
 
 \subsubsection{Serial code}\label{triangularSumExercise_serial}
 We provide serial code in C and Fortran that implement the above sum.
-Using $N=40000$ and $h=0.0002$ gives an estimate for $\pi$ which is 4 digit accurate.  Before proceeding, make sure you keep a copy of the serial code.
+Using $N=44800$ and $h=0.0002$ gives an estimate for $\pi$ which is 4 digit accurate.  Before proceeding, make sure you keep a copy of the serial code.
 
 \subsubsection{OpenMP parallelisation}
 Once you have a working serial code, you should parallelise it using OpenMP.   This is best accomplished using the loop construct.  To achieve good performance, each thread should sum its contribution into a private variable and only in the end do a protected update to a shared variable for the final result. You might want to clean up your code that it compiles in serial and parallel.
 \begin{itemize}
 \item Check that your results do not change when you use different thread numbers.
-\item Measure the performance.  Are you achieving good parallel speed up when using multiple threads?  Run your program using 1, 2, 4, 8 and 16 threads.
+\item Measure the performance.  Are you achieving good parallel speed up when using multiple threads?  Run your program using 1, 2, 4, 8, 16 and 28 threads.
 \end{itemize}
 
 \subsubsection{Schedule}
-If you haven't specified a \verb+schedule+ clause, you should have observed that the speed-up on multiple processors was poor.  Specifying a schedule should improve the situation.  When using 16 threads, investigate the performance for a static schedule for a chunk size of 1, 10, 100, 1250, 2500.  Can you achieve better results using dynamic scheduling?
+If you haven't specified a \verb+schedule+ clause, you should have observed that the speed-up on multiple processors was poor.  Specifying a schedule should improve the situation.  When using 28 threads, investigate the performance for a static schedule for a chunk size of 1, 10, 100, 800, 1600.  Can you achieve better results using dynamic scheduling?
 
