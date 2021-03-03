@@ -34,10 +34,10 @@ int main()
 
   // parallel evaluation of the double sum, parallelise outer loop
 #pragma omp parallel default(none)              \
-  private(xpos, ypos, local_int) shared(integral) schedule(dynamic,1000) 
+  private(xpos, ypos, local_int) shared(integral) 
   {
     local_int = 0.0;
-#pragma omp for
+#pragma omp for schedule(dynamic,1000) 
     for ( int i = 0; i < NSIZE; i++)
       {
 
