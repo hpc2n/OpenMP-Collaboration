@@ -9,7 +9,7 @@ int main()
   double pi_square = 0.0;
 
   // thread management variables
-  int thread_id, thread_num
+  int thread_id, thread_num;
 
   // accumulation variable
   double local_pi;
@@ -21,7 +21,7 @@ int main()
   double start_time = omp_get_wtime();
 #endif
     
-#pragma omp parallel default(none) shared(pi_square)
+#pragma omp parallel default(none) shared(pi_square) \
   private(thread_id, thread_num, local_pi, my_num, my_first, my_last)
   {
     thread_id  = omp_get_thread_num();
