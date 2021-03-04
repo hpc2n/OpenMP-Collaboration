@@ -26,6 +26,7 @@ Program gauss2d
   !$ parallel_omp = .true.
 
   ! query the number of threads
+  ! remark: A master construct would be more elegant here
   if ( parallel_omp ) then
      !$OMP parallel default(none) shared(numthreads)
      !$ if (omp_get_thread_num() .eq. 0) then
