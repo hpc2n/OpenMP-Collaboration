@@ -15,5 +15,5 @@ module load intel/2020a
 
 export OMP_NUM_THREADS=$SLURM_CPUS_PER_TASK
 
-./hello_exe
+./code_exe
 
