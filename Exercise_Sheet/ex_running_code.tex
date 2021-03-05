@@ -1,4 +1,4 @@
-\subsection{Important information: Compiling and Running OpenMP in an HPC environment }
+\subsection{Exercise: Compiling and Running OpenMP in an HPC environment }
 
 Before compiling your code it is recommended to purge the module system:
 
@@ -6,24 +6,40 @@ Before compiling your code it is recommended to purge the module system:
 ml purge
 \end{verbatim}
 
-Now we can compile our code with the compiler we choose:
+Now, we can compile our code with the compiler we choose:
 
 \subsubsection{GNU Compilers}
 
 \begin{verbatim}
+ml purge
 module load foss/2020b
-gfortran -fopenmp -o code_exe code.f90
+# Fortran
+gfortran -O3 -march=native -o code_serial_exe code.f90     #Serialized code
+gfortran -O3 -march=native -fopenmp -o code_exe code.f90   #OpenMP aware code
+
+# C
+gcc -O3 -march=native -o code_serial_exe code.c     #Serial code
+gcc -O3 -march=native -fopenmp -o code_exe code.c   #OpenMP aware code
 \end{verbatim}
 
 \subsubsection{Intel Compilers}
 
 \begin{verbatim}
+ml purge
 module load intel/2020a
-ifort -qopenmp -O3 -xHost -o code_exe  code.f90
+
+# Fortran
+ifort -O3 -xHost -o code_serial_exe  code.f90       #Serial code
+ifort -qopenmp -O3 -xHost -o code_exe  code.f90     #OpenMP aware code
+
+# C
+iicc -O3 -xHost -o code_serial_exe  code.f90       #Serial code
+iicc -qopenmp -O3 -xHost -o code_exe  code.f90     #OpenMP aware code
 \end{verbatim}
 
-Notice that we can compile the code with optimization flags such as "-O3 -xHost". 
-We can set the number of threads to  execute our code with an environment variable:
+Notice that we can compile the code with optimization flags such as "-O3 -march=native -xHost". 
+We can set the number of threads to  execute our code with an environment variable
+for the OpenMP aware code:
 
 \begin{verbatim}
 export OMP_NUM_THREADS=4
@@ -37,12 +53,13 @@ batch job looks like this:
 
 \begin{verbatim}
 #!/bin/bash
-#SBATCH -A  SNIC-PROJECT        # you have one for this course
+#SBATCH -A  SNIC2021-22-37      # you have one for this course
 #SBATCH -t 00:03:00             # time the code will take
 #SBATCH -c 2                    # number of cpus requested
 #SBATCH -J data_process         # name of job
 #SBATCH -o process_omp_%j.out   # output file
 #SBATCH -e process_omp_%j.err   # error messages
+#SBATCH --reservation=snic2021-22-37-dayX  #reservation change X
 
 cat $0                          # it will log this script
 
@@ -54,4 +71,11 @@ export OMP_NUM_THREADS=$SLURM_CPUS_PER_TASK # setting nr. threads
 
 ./code_exe
 \end{verbatim}
+
+In the present exercise, located in the folder \textit{Templates/Day_1/Running_OpenMP/SampleScript},
+you can find the code.f90/code.c files that you can 1) compile with the compiler of your 
+preference in serial and parallel (OpenMP) mode. 2) submit the serial and parallel
+executable codes to the SLURM queue by using the job.sh file which is also provided
+in the folder (modify it to set the project ID, the number of cores you want, 
+the time, and the reservation queue).
 
