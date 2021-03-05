@@ -72,10 +72,15 @@ export OMP_NUM_THREADS=$SLURM_CPUS_PER_TASK # setting nr. threads
 ./code_exe
 \end{verbatim}
 
-In the present exercise, located in the folder \textit{Templates/Day_1/Running_OpenMP/SampleScript},
-you can find the code.f90/code.c files that you can 1) compile with the compiler of your 
-preference in serial and parallel (OpenMP) mode. 2) submit the serial and parallel
-executable codes to the SLURM queue by using the job.sh file which is also provided
+In the present exercise, located in the folder:
+\begin{verbatim}
+   Templates/Day_1/Running_OpenMP/SampleScript
+\end{verbatim}
+you can find the {\verb+code.f90+ and \verb+code.c+  files that you can 
+\begin{enumerate}
+\item compile with the compiler of your  preference in serial and parallel (OpenMP) mode. 
+\item submit the serial and parallel
+executable codes to the SLURM queue by using the \verb+job.sh+ file which is also provided
 in the folder (modify it to set the project ID, the number of cores you want, 
 the time, and the reservation queue).
-
+\end{enumerate}
