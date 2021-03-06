@@ -83,4 +83,8 @@ you can find the {\verb+code.f90+ and \verb+code.c+  files that you can
 executable codes to the SLURM queue by using the \verb+job.sh+ file which is also provided
 in the folder (modify it to set the project ID, the number of cores you want, 
 the time, and the reservation queue).
+\item submit the job to the queue with the command: \verb+sbatch job.sh+, this will output
+a number which is the "job ID"
+\item the command \verb+job-usage job_ID+ on the Kebnekaise terminal will give you an URL
+which you can copy/paste on your local browser to monitor the CPU/Memory usage of your code
 \end{enumerate}
