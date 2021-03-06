@@ -3,9 +3,21 @@
 *.log
 *.aux
 *.synctex.gz
-./Templates/Day_1/Hello_world/
-!./Templates/Day_1/Hello_world/*.c
-!./Templates/Day_1/Hello_world/*.f90
-!./Templates/Day_1/Hello_world/SampleSolutions/*.c
-!./Templates/Day_1/Hello_world/SampleSolutions/*.f90
 
+Templates/Day_1/Hello_world/
+!Templates/Day_1/Hello_world/*.c
+!Templates/Day_1/Hello_world/*.f90
+!Templates/Day_1/Hello_world/SampleSolutions/*.c
+!Templates/Day_1/Hello_world/SampleSolutions/*.f90
+
+Templates/Day_1/Running_OpenMP/
+!Templates/Day_1/Running_OpenMP/*.c
+!Templates/Day_1/Running_OpenMP/*.f90
+!Templates/Day_1/Running_OpenMP/SampleScript/*.c
+!Templates/Day_1/Running_OpenMP/SampleScript/*.f90
+
+Templates/Day_2/CalculatingPi/
+!Templates/Day_2/CalculatingPi/C/*.c
+!Templates/Day_2/CalculatingPi/Fortran/*.f90
+!Templates/Day_2/CalculatingPi/SampleSolution/*.c
+!Templates/Day_2/CalculatingPi/SampleSolution/*.f90
