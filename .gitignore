@@ -3,3 +3,9 @@
 *.log
 *.aux
 *.synctex.gz
+./Templates/Day_1/Hello_world/
+!./Templates/Day_1/Hello_world/*.c
+!./Templates/Day_1/Hello_world/*.f90
+!./Templates/Day_1/Hello_world/SampleSolutions/*.c
+!./Templates/Day_1/Hello_world/SampleSolutions/*.f90
+
