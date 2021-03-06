@@ -1,0 +1,13 @@
+\subsection{Exercise: Vectorsing code}
+Many scientific codes have to evaluate computationally expensive user defined functions.  If these are called inside a loop, the compiler typically required help when vectorising this loop.  In this exercise we will study this in a sample code that calculates the $\sin$ of a vector of lenght 8192.  We have
+\begin{equation}
+\sin(x) \approx x - \frac{x^3}{3!}  + \frac{x^5}{5!} - \frac{x^7}{7!} + \frac{x^{11}}{11!} + ...
+\end{equation}
+\subsubsection{Auto vectorisation and compiler feedback}
+Engage auto-vectorisation and let the compiler report on vectorisation.  The template code has three loops.  For which loop did the compiler not succeed in vectorising.
+\subsubsection{Vectorising the working loop}
+In the previous exercise you should have noticed that the compilers (GCC 10.2.0 and Intel 2020.1) can not vectorise the key working loop of the sample code.  Use the OpenMP \verb+simd+ construct to help the compiler.  At this stage you should not use loop constructs.
+After vectorisation you should obtain a good performance  boost from the GCC compiler.
+
+\subsubsection{Extra playtime: Combining the loop construct with the {\tt simd} construct}
+If you have time left, you can investigate how the SIMD construct and the loop construct work together.   You will need to increase the problem size for this.
