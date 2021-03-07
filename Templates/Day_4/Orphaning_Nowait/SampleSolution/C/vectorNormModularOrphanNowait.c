@@ -48,6 +48,7 @@ int main()
   // print result
   printf("Norm: %f\n",norm);
 
+  free(vect);
   
   // query the number of threads
 #pragma omp parallel default(none) shared(numThreads)

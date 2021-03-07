@@ -17,7 +17,8 @@ int main()
   vect = malloc(vleng * sizeof(double));
 
   // measure multiple times to stabilise results - cycles is defined in vectorNormSizes.h
-  for (int iloop=0; iloop < cycles; iloop++)
+  // uncomment the loop when required
+  //for (int iloop=0; iloop < cycles; iloop++)
     {      
 
       norm =0.0;
