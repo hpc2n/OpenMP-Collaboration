@@ -99,7 +99,8 @@ int main()
 #endif
   for(int i = 0; i<VLENG; i++)
     {
-      double compare = (c[i] - 6.0 * (double) (i*i) )/c[i];
+      double idb = (double)i;
+      double compare = (c[i] - 6.0 * idb * idb )/c[i];
       compare = fabs(compare);
       if ( compare > 1.0E-14)
 	{
