@@ -1,11 +1,12 @@
 #!/bin/bash
-#SBATCH -A 
+#SBATCH -A SNIC2021-22-37
 #Asking for 3 min.
 #SBATCH -t 00:03:00
 #SBATCH -c 2
 #SBATCH -J data_process         # name of job
 #SBATCH -o process_omp_%j.out   # output file
 #SBATCH -e process_omp_%j.err   # error messages
+#SBATCH --reservation=snic2021-22-37-dayX
 
 cat $0
 
