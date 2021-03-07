@@ -1,5 +1,5 @@
 #!/bin/bash
-#SBATCH -A SNIC2021-22-3
+#SBATCH -A SNIC2021-22-37
 #Asking for 3 min.
 #SBATCH -t 00:03:00
 #SBATCH -c 2
