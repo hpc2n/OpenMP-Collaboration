@@ -5,7 +5,7 @@ Program VectorNormModular
   
   implicit none
 
-  double precision, dimension(*), allocatable :: vect
+  double precision, dimension(:), allocatable :: vect
   double precision :: norm
 
   double precision :: startTime, endTime
@@ -13,7 +13,7 @@ Program VectorNormModular
 
   integer :: iloop
   
-  print *, "Length:" vleng
+  print *, "Length:", vleng
 
   allocate(vect(vleng))
 
@@ -32,7 +32,7 @@ Program VectorNormModular
 
   endTime = omp_get_wtime() - startTime
   ! normalise timing
-  endTime = enTime/ncycles
+  endTime = endTime/ncycles
 
   ! print result
   print *,"Norm::", norm
@@ -45,23 +45,24 @@ Program VectorNormModular
   !$omp end master
   !$omp end parallel
 
-  print *, "Average time taken:" endTime*1000.0D0, " ms on", numThreads, &
-       "averaged over", ncycles, " cycles"
+  print *, "Average time taken:", endTime*1000.0D0, " ms on", numThreads, &
+       "threads, averaged over", ncycles, " cycles"
 
 contains
 
   subroutine vectorInit(v, leng)
     integer, intent(in)  :: leng
-    double precision, intent(out) :: v
+    double precision, dimension(leng), intent(out) :: v
 
     integer i
 
     ! orphan directive
     ! default static schedule is required in connection with the nowait statement
-    !$omp do schedule(static) nowait
+    !$omp do schedule(static)
     do i=1, leng
        v(i) = dble(i)
     enddo
+    !$omp end do nowait
 
   end subroutine vectorInit
 
@@ -69,7 +70,7 @@ contains
   
   function vectorNormSqr(v, leng)
     integer, intent(in) :: leng
-    double precision, intent(in) :: v
+    double precision, dimension(leng), intent(in) :: v
     double precision :: vectorNormSqr
 
     integer i
@@ -77,10 +78,11 @@ contains
     vectorNormSqr = 0.0d0
     ! orphan directive
     ! default static schedule is required in connection with the nowait statement
-    !$ omp do schedule(static) nowait
+    !$omp do schedule(static)
     do i=1, leng
        vectorNormSqr = VectorNormSqr + v(i) * v(i)
     enddo
+    !$omp end do nowait
 
   end function vectorNormSqr
   

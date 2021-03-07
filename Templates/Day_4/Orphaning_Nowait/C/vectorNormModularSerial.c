@@ -38,7 +38,7 @@ int main()
 void vectorInit(double* v, int leng)
 {
   for (int i=0; i < leng; i++)
-    v[i] = (double) i; 
+    v[i] = (double) (i+1); 
   return;
 }
 

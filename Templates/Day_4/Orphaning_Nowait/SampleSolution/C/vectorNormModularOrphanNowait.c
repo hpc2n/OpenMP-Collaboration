@@ -73,7 +73,7 @@ void vectorInit(double* v, int leng)
   // default static schedule is required in connection with the nowait statement
 #pragma omp for schedule(static) nowait
   for (int i=0; i < leng; i++)
-    v[i] = (double) i; 
+    v[i] = (double) (i+1); 
   return;
 }
 
