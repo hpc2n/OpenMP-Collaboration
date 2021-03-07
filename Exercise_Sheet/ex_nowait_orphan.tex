@@ -1,0 +1,44 @@
+\subsection{Exercise: Nowait and Orphaning}
+As discussed in the lectures, orphaning and nowait clauses can be deployed to boost the performance of OpenMP codes.  While many of the exercise of this course can be reasonably coded without the use of functions and subroutines, this is not an option for proper scientific applications.  The aim of this exercise is to study how the efficiency of the parallelisation of a modularised code can be improved.
+
+\subsubsection{Modular serial code}
+For this exercise we need a simple code which uses two modules:
+\begin{enumerate}
+
+\item A subroutine (Fortran) or function of type \verb+void+ (C) which initialises a previously allocated vector $v_i$
+\begin{equation}
+v_i = i
+\end{equation}
+
+\item A function which returns a \verb+double precision+ (Fortran) or \verb+double+ (C) variable.  The function should implement the Euclidian norm
+\begin{equation}
+|| v || = \sqrt{\sum_i v_i v_i}
+\end{equation}
+
+\end{enumerate}
+
+Use these modules to implement a program, which allocates/mallocs a long vector, initialises it and calculates the norm of the vector.  The final result should be printed.  The program is parallelised in three different ways and the performance to be compared.
+
+\subsubsection{Parallelisation inside the modules}
+A very simple way to implement a parallelisation is to start a \verb+parallel do/for+ 
+inside each of the two modules and using a reduction for the norm.  Implement and test it gives the same result as the serial code.  Insert timers into your code and check that the code gets faster if you use more threads.  You might need to experiment with the vector size, about 40000 seems a good starting point when using the Intel compiler with reasonably aggressive optimisation.    
+
+\subsubsection{Orphan directives}
+The previous parallelisation is very easy to implement but has the downside of opening and closing two parallel sections.  By using orphan directives we can keep a modular code while having only one parallel section for the entire code.
+
+Start your parallel section before the call to the initialisation routine and close it after the function calculating the norm.  Inside the two modules you place a \verb+do/for+ directive instead of \verb+parallel do/for+.  This should be straight forward for the initialisation routine, but for the norm matters are more complicated since
+\begin{equation}
+\sqrt{a+b} \ne \sqrt a + \sqrt b
+\end{equation}
+To get the correct result it might be most elegant to change the second module to a function that calculates 
+\begin{equation}
+|| v ||^2 = \sum_i v_i v_i
+\end{equation}
+This way the summation can be easily parallelised.  Take care to avoid any data race.  The root can be taken in the calling program after the parallel region has been closed.
+
+\subsubsection{Nowait}
+By choosing an appropriate schedule for your loop constructs you should convince yourself that there is no need for a barrier at the end of the two loop constructs (in initialisation and calculation of the norm square).  The implied barrier at the end of the parallel region should be enough to ensure the correctness of your code.  Use \verb+nowait+-clauses to remove the implied barriers from the loop constructs.  
+
+It is interesting to see how the code with the \verb+nowait+-clauses produces the wrong results if e.g.\ a default dynamic schedule is used.  However the code without the \verb+nowait+ will still be correct.  To see this, you should run the timing section only once per program execution.
+
+Compare the performance of the three parallelisations for different numbers of treads.

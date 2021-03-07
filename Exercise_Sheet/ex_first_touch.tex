@@ -1,0 +1,20 @@
+\subsection{Exercise: First Touch}
+\subsubsection{Vector multiplication}
+Write a serial code which:
+\begin{itemize}
+\item	Initialises three vectors $a_i=2i$, $b_i=3i$ and $c_i = i$
+\item	In a separate loop sets a third vector $c_i= a_i \, b_i$
+\item	In a third loop check for correctness, that is, whether $c_i=6i^2$ for all $i$ holds.  
+At the end of the loop you should have a logical variable stating whether or not the code passed or didn't pass the test.  Demand reasonable accuracy in your test (e.g.\ a relative uncertainty of about 14 digits for a double precision code seem ok).
+
+If you are doing this exercise in C, make sure not to use \verb+calloc()+.
+\end{itemize}
+\subsubsection{Parallel code without \textit{first touch}}\label{noFirstTouch}
+Parallelise the loop assigning $c_i = a_i \, b_i$ using the loop construct.  You should then place timers around all the loops to measure their performance.  To get stable timings, you should place an outer loop around the entire sequence of initialisation, calculation and verification.  Run the sequence a number of times and average the results.
+
+Modern multicores processors have very large shared caches (several 10 MB).  Make sure your vectors are larger than the cache sizes.
+
+\subsubsection{Add \textit{first touch}}
+Place a parallel loop construct (separate parallel region) around your initialisation loop.  Confirm whether or not that has an effect on the performance of the loop you parallelised in part \ref{noFirstTouch} of this exercise.
+\subsubsection{Parallel verification}
+Since we have all these processors, we might also use them to speed up the verification part of the code.  Implementing this is easiest, when using a reduction operation for logical variables.  Confirm that your test work, by artificially placing a wrong result in a specific location of the vector $c$.
