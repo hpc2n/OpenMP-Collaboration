@@ -20,9 +20,6 @@ int main()
   // uncomment the loop when required
   //for (int iloop=0; iloop < cycles; iloop++)
     {      
-
-      norm =0.0;
-
       
       vectorInit(vect, vleng);	
       norm = vectorNormSqr(vect, vleng);	

@@ -22,6 +22,9 @@ Program VectorNormModular
   ! measure multiple times to stabilise results - ncycles is defined in vectorNormSizes.f90
   do iloop = 1, ncycles
 
+     ! initialisation of norm required, since norm is a reduction variable
+     norm = 0.0d0
+     
      !$omp parallel default(none) shared(vect) reduction(+:norm)
      call vectorInit(vect, vleng)
      norm = vectorNormSqr(vect,vleng)

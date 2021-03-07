@@ -27,6 +27,7 @@ int main()
   for (int iloop=0; iloop < cycles; iloop++)
     {      
 
+      // initialisation of norm required, since norm is a reduction variable
       norm =0.0;
 
 #pragma omp parallel default(none) shared(vect) reduction(+:norm)
