@@ -16,7 +16,7 @@ int main()
 
   vect = malloc(vleng * sizeof(double));
 
-  // measure multiple times to stabilise results - cycles is defined in vectorNormSizes.h
+  // measure multiple times to stabilise timing results - cycles is defined in vectorNormSizes.h
   // uncomment the loop when required
   //for (int iloop=0; iloop < cycles; iloop++)
     {      
@@ -28,6 +28,8 @@ int main()
 
   printf("Norm: %f\n",norm);
 
+  free(vect);
+  
 }
 
 
