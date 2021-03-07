@@ -15,7 +15,7 @@
 //#define USE_CALLOC
 
 // switch parallel checking
-//%define PARALLEL_CHECK
+#define PARALLEL_CHECK
 
 int main()
 {
@@ -78,20 +78,20 @@ int main()
 
   calc_time =  omp_get_wtime() - start_time;
 
-
-  printf("Size: %10d  Threads: %d  Time: %.6f s\n", VLENG, num_threads, calc_time);
   printf("Time for inititalisation: %.6f s\n", init_time);
+  printf("Size: %10d  Threads: %d  Time: %.6f s\n", VLENG, num_threads, calc_time);
+
   // Testing
 
   int pass=1;
 
 #ifndef PARALLEL_CHECK
-  printf("serial correctness check!\n");
+  printf("Serial correctness check!\n");
 
   start_time = omp_get_wtime();
 
 #else
-  printf("parallel correctness check!\n");
+  printf("Parallel correctness check!\n");
 
   start_time = omp_get_wtime();
 
@@ -111,13 +111,17 @@ int main()
 	  }
 	} // endif	
     }
-  
+
+  double check_time =  omp_get_wtime() - start_time;
+
   if ( pass ) 
     { printf("Test passed!\n");
     }
   else
     { printf("Test failed!!!\n");
     }
+
+  printf("Time for correctness check: %.6f s\n", check_time);
   
   free (a);
   free (b);
