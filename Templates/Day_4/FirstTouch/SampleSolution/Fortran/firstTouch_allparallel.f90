@@ -3,7 +3,7 @@ Program firstTouch_lab
   use omp_lib
   implicit none
 
-  interger, parameter :: vleng = 500000000
+  integer, parameter :: vleng = 500000000
 
   ! data structures
   double precision, dimension(:), allocatable :: a, b, c
@@ -30,8 +30,8 @@ Program firstTouch_lab
   !$omp end master
   !$omp end parallel
 
-  start_time = omp_get_wtime
-  !$omp parallel do default(none) shared(a, b, c), shedule(static)
+  start_time = omp_get_wtime()
+  !$omp parallel do default(none) shared(a, b, c) shedule(static)
   do i= 1, vleng
      idbl = dble(i)
      a(i) = 2.0D0 * idbl
@@ -43,7 +43,7 @@ Program firstTouch_lab
 
   start_time = omp_get_wtime()
   
-  !$omp parallel do default(none) shared(a, b, c), shedule(static)
+  !$omp parallel do default(none) shared(a, b, c) shedule(static)
   do i=1, vleng
      c(i) = a(i) * b(i)
   enddo
@@ -58,7 +58,7 @@ Program firstTouch_lab
 
   start_time = omp_get_wtime()
 
-  !$omp parallel do default(none), chared(c) reduction( .and. : pass) schedule static
+  !$omp parallel do default(none) chared(c) reduction( .and. : pass) schedule(static)
   do i=1, vleng
      idbl = dble(i)
      compare = (c(i) - 6.0d0 * idbl *idbl)/c(i)
@@ -77,7 +77,7 @@ Program firstTouch_lab
      print *, "Verification: failed!!!!"
   endif
 
-  print *, "Time for verification:" check_time
+  print *, "Time for verification:", check_time
 
   deallocate(a)
   deallocate(b)
