@@ -1,0 +1,230 @@
+\documentclass[a4paper,oneside,12pt]{article}
+
+\usepackage{url}
+\usepackage[english]{babel}
+
+\setlength\topmargin{-0.4in}
+\setlength\headheight{0.3in}
+\setlength\headsep{0.1in}
+\setlength\textheight{9.69in}
+\setlength\textwidth{6.27in}
+\setlength\oddsidemargin{0.0in}
+\setlength\evensidemargin{0.0in}
+\setlength\parindent{0.0in}
+\setlength\parskip{4.0pt}
+
+\begin{document}
+
+\thispagestyle{empty}
+
+\begin{center}
+  \underline{\large \bf Exercise sheet}\\\vspace{0.2cm}
+  \underline{\large \bf ``Shared Memory Programming With OpenMP''}\\[2ex]
+  {\Large May 2018}
+  \vspace{0.5cm}
+\end{center}
+
+\section*{General remarks: parallel performance assessment}
+
+In many exercises we ask for performance assessment.  For that you need to put timers into the code, as shown in the lectures.  However it is often not easy to get stable and reproducible results.
+
+A few general remarks:
+\begin{itemize}
+\item Avoid hardware shared between a number of users  
+\begin{itemize}
+\item In particular front-end nodes of the SNIC clusters are used simultaneously by a number of users and some users abuse them.  In particular for testing parallel performance results obtained on the front-end show large variations and are typically worthless.  Most SNIC centres actually regard testing of parallel codes on front-end nodes as abuse.  Parallel tests use all the cores of the front end system and impede on other users.
+\item The cores of a compute node are not truly independent - this will be discussed in detail throughout the course.  While shared nodes are ok for correctness checking and many production situations, they are to be avoiding for performance testing.  For the slurm scheduler the line
+\begin{verbatim}
+  #SBATCH --exclusive
+\end{verbatim}
+in the header of the submission script gives you exclusive access to a node.  You should use this with consideration for the other course participants.  In production, this will charge you for all the cores assigned to the job, whether or not you use them.
+\end{itemize}
+\item To get stable and reproducible results you might need to place a loop inside the code that runs the timing section many times.  This smoothes over a lot of the operational noise typical for a UNIX system.  
+
+If you are timing code sections in the micro-second range, you should place your timers outside that loop.  The starting timer directly before and the stopping timer directly after. 
+\item Use thread binding, that also reduces the effect operational noise has on your code.  Be aware that the map of your binding will affect the timing, but this way you get at least results for a situation you understand instead of something that is all-over-the-place.
+\item Experiment with the problem size.  OpenMP calls carry a significant overhead.  You need enough computational work between the OpenMP directives to get a benefit from the parallelisation. \textbf{However:} Correctness tests and debugging is best performed on small problem sizes.
+\end{itemize}
+
+\section*{Important practicality:}
+\textit{Keep copies of all solutions, including serial codes developed prior to starting the parallelisation.  You may need them as starting point for later exercises.}
+
+\section{Exercise: Serial and threaded code}
+In this exercise we write a parallel version of the World’s most famous application: ``\textit{Hello World}'' 
+
+\subsection{Serial code}\label{helloOMPexercise}
+Write a C or Fortran code that prints:
+\begin{quote}
+\verb+Hello world, I am a serial code!+
+\end{quote}
+Execute your codes using the job scheduler (batch system).
+
+\subsection{Parallel code}
+Now parallelise your code using OpenMP.  You should place a print statement inside a parallel region.  The thread number should be controlled with the appropriate environment variable.  Each thread should print its thread number and the total number of threads utilized concurrently.  For example thread number 2, when utilising a total of 4 threads should print
+\begin{quote}
+\verb+Hello world, I am thread 2 of 4 threads!+
+\end{quote}
+The parallel version of the code should still be able to compile serially and produce the same result as in exercise \ref{helloOMPexercise}.  To achieve this, you have to use C-preprocessor directives or the ``\verb+!$+''-sentinel to achieve this.
+
+
+\section{Exercise: Calculating Pi}
+It can be shown that:
+\begin{equation}
+\sum_{n=1}^N \frac{1}{n^2} \;\stackrel{N \to \infty}{\longrightarrow}
+\;\frac{\pi^2}{6}
+\end{equation}
+
+\subsection{Serial program}
+Write a serial C or Fortran program, which sums $1/n^2$ for a large value of $N$.  When programming you need to make sure that you get a floating point division. You also have to avoid (integer) overflow of the denominator.  Using long or 8-byte integers is not the way forward here.  Experiment with different values of $N$ and make sure your result is correct.
+
+\subsection{Parallel program, manual work distribution}\label{PiManual}
+Make a copy of your serial program and parallelise it using the OpenMP construct \textit{parallel}.  In this exercise you should write the code (C or Fortran) to distribute the work onto the threads. That is, starting with the value of $N$, using the number of threads and the thread-id number, each thread should determine the $n$-range it is working on.  In this exercise it is ok, if you assume that $N$ is divisible by the thread count.  Also due to the complexity of this management code, it is ok if this code would not compile in serial.
+
+Think carefully, which variables need to be declared as \texttt{shared} and which ones need to be declared as \texttt{private}.  Please do not use any other declarations here.  In this exercise it is easy to create a \textit{data race}.  This has to be avoided while still maintaining high performance (minimise serialisation).
+
+Once the code is finished you should check that 
+\begin{enumerate}
+\item The parallel code is producing a correct results
+\item The results are independent of the thread count
+\item Introduce a timer into your code and experiment with different values of $N$.  Rerun you code with 1, 2, 5, 10 and 20 threads.  For small values of $N$ you should notice that the code will run slower for larger thread counts, while for large values of $N$ it will run faster when more threads are used.
+\item \label{runtimePi} Do repeated runs of the same run. In particular when using all the threads per  node, do you get the same times.
+\end{enumerate}
+It is interesting to experiment with thread binding when working on point~\ref{runtimePi}.    When using OpenMP 4.0 compliant compilers you can control the binding by setting the environment variables \verb+OMP_BIND_PROC+ and \verb+OMP_PLACES+. 
+%When using the gnu compiler binding can be engaged with the environment variable \verb+GOMP_CPU_AFFINITY+, while for the Intel compiler, binding can be achieved using the environment variable \verb+KMP_AFFINITY+.
+
+\section{Exercise: Parallel workshareing}\label{workshareExercise}
+Simplify your code from part \ref{PiManual} by using a workshareing constructs, one of loop, \verb+sections+ or \verb+workshare+.  You should notice that the code gets a lot simpler.  Use \verb+!$+-sentinels or the C-preprocessor to make this version compile with and without OpenMP active.
+
+
+\section{Exercise: Summation over triangular area}\label{triangularSumExercise}
+
+Using polar coordinates it can be shown
+\begin{equation}
+\int_{-\infty}^\infty \int_{-\infty}^\infty \exp(-(x^2 +y^2)) dx dy = \pi
+\end{equation}
+The double integral on the left hand side can, using the symmetries available be approximated by
+\begin{equation}
+\lim_{h\to0}\lim_{N\to\infty}\left[
+8\sum_{i=0}^{N-1}\sum_{j=i+1}^{N-1}
+h^2 \exp\left(-h^2 (i^2 + j^2)
+\right)\right]
+\end{equation}
+Note that the second sum has its index starting at $i+1$ instead of 0.
+
+\subsection{Serial code}\label{triangularSumExercise_serial}
+In a first step you should 
+write a serial code to implement the above sum.
+Using $N=40000$ and $h=0.0002$ gives an estimate for $\pi$ which is 4 digit accurate.  Before proceeding, make sure you keep a copy of your serial code - we need it in a later exercise.
+
+\subsection{OpenMP parallelisation}
+Once you have a working serial code, you should parallelise it using OpenMP.   This is best accomplished using the loop construct.  To achieve good performance, each thread should sum its contribution into a private variable and only in the end do a protected update to a shared variable for the final result. You might want to clean up your code that it compiles in serial and parallel.
+\begin{itemize}
+\item Check that your results do not change when you use different thread numbers.
+\item Measure the performance.  Are you achieving good parallel speed up when using multiple threads?  Run your program using 1, 2, 4, 8 and 16 threads.
+\end{itemize}
+
+\subsection{Schedule}
+If you haven't specified a \verb+schedule+ clause, you should have observed that the speed-up on multiple processors was poor.  Specifying a schedule should improve the situation.  When using 16 threads, investigate the performance for a static schedule for a chunk size of 1, 10, 100, 1250, 2500.  Can you achieve better results using dynamic scheduling?
+
+\section{Exercise: Reduction}
+Copy your codes from exercises \ref{workshareExercise} and \ref{triangularSumExercise}.  
+Upgrade the copies to use a reduction operation.  Make sure your code is neat and tidy.
+\subsection{Working for any number of iterations}
+Show that the code gives, within rounding, correct answers even even if the iteration count and the number of threads do not divide, while you old versions are incorrect.  This is easiest when you use a moderate iteration count and compare for different numbers of threads.
+
+\section{Exercise: Nowait and Orphaning}
+As discussed in the lectures, orphaning and nowait clauses can be deployed to boost the performance of OpenMP codes.  While many of the exercise of this course can be reasonably coded without the use of functions and subroutines, this is not an option for proper scientific applications.  The aim of this exercise is to study how the efficiency of the parallelisation of a modularised code can be improved.
+
+\subsection{Modular serial code}
+For this exercise we need a simple code which uses two modules:
+\begin{enumerate}
+
+\item A subroutine (Fortran) or function of type \verb+void+ (C) which initialises a previously allocated vector $v_i$
+\begin{equation}
+v_i = i
+\end{equation}
+
+\item A function which returns a \verb+double precision+ (Fortran) or \verb+double+ (C) variable.  The function should implement the Euclidian norm
+\begin{equation}
+|| v || = \sqrt{\sum_i v_i v_i}
+\end{equation}
+
+\end{enumerate}
+
+Use these modules to implement a program, which allocates/mallocs a long vector, initialises it and calculates the norm of the vector.  The final result should be printed.  The program is parallelised in three different ways and the performance to be compared.
+
+\subsection{Parallelisation inside the modules}
+A very simple way to implement a parallelisation is to start a \verb+parallel do/for+ 
+inside each of the two modules and using a reduction for the norm.  Implement and test it gives the same result as the serial code.  Insert timers into your code and check that the code gets faster if you use more threads.  You might need to experiment with the vector size - on Triolith about 40000 seems a good starting point when using the Intel compiler with reasonably aggressive optimisation.    
+
+\subsection{Orphan directives}
+The previous parallelisation is very easy to implement but has the downside of opening and closing two parallel sections.  By using orphan directives we can keep a modular code while having only one parallel section for the entire code.
+
+Start your parallel section before the call to the initialisation routine and close it after the function calculating the norm.  Inside the two modules you place a \verb+do/for+ directive instead of \verb+parallel do/for+.  This should be straight forward for the initialisation routine, but for the norm matters are more complicated since
+\begin{equation}
+\sqrt{a+b} \ne \sqrt a + \sqrt b
+\end{equation}
+To get the correct result it might be most elegant to change the second module to a function that calculates 
+\begin{equation}
+|| v ||^2 = \sum_i v_i v_i
+\end{equation}
+This way the summation can be easily parallelised.  Take care to avoid any data race.  The root can be taken in the calling program after the parallel region has been closed.
+
+\subsection{Nowait}
+By choosing an appropriate schedule for your loop constructs you should convince yourself that there is no need for a barrier at the end of the two loop constructs (in initialisation and calculation of the norm square).  The implied barrier at the end of the parallel region should be enough to ensure the correctness of your code.  Use \verb+nowait+-clauses to remove the implied barriers from the loop constructs.  
+
+It is interesting to see how the code with the \verb+nowait+-clauses produces the wrong results if e.g.\ a default dynamic schedule is used.  However the code without the \verb+nowait+ will still be correct.  To see this, you should run the timing section only once per program execution.
+
+Compare the performance of the three parallelisations for different numbers of treads.
+
+\section{Exercise: First Touch}
+\subsection{Vector multiplication}
+Write a serial code which:
+\begin{itemize}
+\item	Initialises three vectors $a_i=2i$, $b_i=3i$ and $c_i = i$
+\item	In a separate loop sets a third vector $c_i= a_i \, b_i$
+\item	In a third loop check for correctness, that is, whether $c_i=6i^2$ for all $i$ holds.  
+At the end of the loop you should have a logical variable stating whether or not the code passed or didn't pass the test.  Demand reasonable accuracy in your test (e.g.\ a relative uncertainty of about 14 digits for a double precision code seem ok).
+
+If you are doing this exercise in C, make sure not to use \verb+calloc()+.
+\end{itemize}
+\subsection{Parallel code without \textit{first touch}}\label{noFirstTouch}
+Parallelise the loop assigning $c_i = a_i \, b_i$ using the loop construct.  You should then place timers around all the loops to measure their performance.  To get stable timings, you should place an outer loop around the entire sequence of initialisation, calculation and verification.  Run the sequence a number of times and average the results.
+
+Modern multicores processors have very large shared caches (several 10 MB).  Make sure your vectors are larger than the cache sizes.
+
+\subsection{Add \textit{first touch}}
+Place a parallel loop construct (separate parallel region) around your initialisation loop.  Confirm whether or not that has an effect on the performance of the loop you parallelised in part \ref{noFirstTouch} of this exercise.
+\subsection{Parallel verification}
+Since we have all these processors, we might also use them to speed up the verification part of the code.  Implementing this is easiest, when using a reduction operation for logical variables.  Confirm that your test work, by artificially placing a wrong result in a specific location of the vector $c$.
+% \subsection{Extra exercise: Fortran Workshare}
+% If you have a Fortran code it is interesting to use array syntax and workshare in this exercise and compare to the results with the loop construct.
+
+\section{OpenMP tasks}
+\subsection{Prepare your serial code}
+Take your serial code from exercise~\ref{triangularSumExercise_serial} and modify it:
+\begin{quote}
+Define a block size $B$ and transform the loop implementing the sum over $i$ into two loops.  The outer on counting the blocks, while the inner the individual iterations.  The $M$ denotes the number of blocks, we have $B\cdot M= N$:
+\begin{equation}
+\lim_{h\to0}\lim_{N\to\infty}\left[
+8\sum_{b=0}^{M-1}\left[\sum_{i=b\,B}^{(b+1)B-1}\sum_{j=i+1}^{N-1}
+h^2 \exp\left(-h^2 (i^2 + j^2)
+\right)\right]\right]
+\end{equation}
+\end{quote}
+Confirm you are getting the same results as before.  
+\subsection{Parallelisation using tasks}
+We now want to parallelise the code using OpenMP tasks.  For each $b$ your code should create a task, which evaluates the two inner sums over $i$ and $j$. When parallelising you code, consider that:
+\begin{enumerate}
+\item Each task is created exactly once.
+\item A way to get a result back from the task is a shared variable.
+\item There are no reductions for the task construct
+\item Updates to shared variables from a task are prone to data races and potentially costly if guards agains data races are put in - each task should update it's shared variable once.
+\item Make sure shared variables do not go out of scope before the last task has finished.
+\end{enumerate}
+\subsection{Performance}
+Check that your code speeds up when using more threads.  By changing the block size you can alter the number of tasks created.  If you use large block sizes your load balance will become poor.  
+
+\textbf{Remark:}
+OpenMP 4.5 introduced the \verb+taskloop+ construct, with which this exercise would be easier to parallelise.
+\end{document}
