@@ -115,13 +115,13 @@ int main()
   double check_time =  omp_get_wtime() - start_time;
 
   if ( pass ) 
-    { printf("Test passed!\n");
+    { printf("Verification: passed!\n");
     }
   else
-    { printf("Test failed!!!\n");
+    { printf("Verification: failed!!!\n");
     }
 
-  printf("Time for correctness check: %.6f s\n", check_time);
+  printf("Time for verification: %.6f s\n", check_time);
   
   free (a);
   free (b);
