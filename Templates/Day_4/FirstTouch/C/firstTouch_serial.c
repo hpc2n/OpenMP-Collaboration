@@ -1,6 +1,6 @@
 #include <stdlib.h>
+#include <stdio.h>
 #include <math.h>
-#include <omp.h>
 
 
 /* Remark: Make sure arry is larger than L3 */
