@@ -14,7 +14,7 @@
 // switch for calloc instead of malloc
 //#define USE_CALLOC
 
-// switch parallel checking
+// switch parallel verification
 #define PARALLEL_CHECK
 
 int main()
@@ -81,7 +81,7 @@ int main()
   printf("Time for inititalisation: %.6f s\n", init_time);
   printf("Size: %10d  Threads: %d  Time: %.6f s\n", VLENG, num_threads, calc_time);
 
-  // Testing
+  // Verfication
 
   int pass=1;
 
