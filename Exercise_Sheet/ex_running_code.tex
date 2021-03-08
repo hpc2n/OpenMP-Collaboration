@@ -14,12 +14,12 @@ Now, we can compile our code with the compiler we choose:
 ml purge
 module load foss/2020b
 # Fortran
-gfortran -O3 -march=native -o code_serial_exe code.f90     #Serialized code
+gfortran -O3 -march=native -o code_serial_exe code.f90     #Serial code
 gfortran -O3 -march=native -fopenmp -o code_exe code.f90   #OpenMP aware code
 
 # C
-gcc -O3 -march=native -lm -o code_serial_exe code.c        #Serial code
-gcc -O3 -march=native -lm -fopenmp -o code_exe code.c      #OpenMP aware code
+gcc -O3 -march=native -o code_serial_exe code.c -lm        #Serial code
+gcc -O3 -march=native -fopenmp -o code_exe code.c -lm      #OpenMP aware code
 \end{verbatim}
 
 \subsubsection{Intel Compilers}
@@ -33,8 +33,8 @@ ifort -O3 -xHost -o code_serial_exe  code.f90     #Serial code
 ifort -qopenmp -O3 -xHost -o code_exe  code.f90   #OpenMP aware code
 
 # C
-icc -O3 -xHost -o code_serial_exe  code.c         #Serial code
-icc -qopenmp -O3 -xHost -o code_exe  code.c       #OpenMP aware code
+icc -O3 -xHost -o code_serial_exe  code.c -lm        #Serial code
+icc -qopenmp -O3 -xHost -o code_exe  code.c -lm      #OpenMP aware code
 \end{verbatim}
 
 Notice that we can compile the code with optimization flags such as "-O3 -march=native -xHost". 
