@@ -58,8 +58,7 @@ Program firstTouch_lab
 
   start_time = omp_get_wtime()
 
-  !$omp parallel do default(none) shared(c) private(idbl, compare) &
-  !$                reduction( .and. : pass) schedule(static)
+  !$omp parallel do default(none) shared(c) private(idbl, compare) reduction( .and. : pass) schedule(static)
   do i=1, vleng
      idbl = dble(i)
      compare = (c(i) - 6.0d0 * idbl *idbl)/c(i)
