@@ -8,7 +8,6 @@ int main()
 
 #pragma omp parallel
     {
-      int threadid, threadnum, procnum;
       
 #ifdef _OPENMP
       printf("Hello, I am thread %i of %i\n", 

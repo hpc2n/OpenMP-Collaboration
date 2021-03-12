@@ -35,7 +35,7 @@ Program firstTouch_lab
   do i= 1, vleng
      idbl = dble(i)
      a(i) = 2.0D0 * idbl
-     b(1) = 3.0D0 * idbl
+     b(i) = 3.0D0 * idbl
      c(i) =         idbl
   enddo
 
@@ -63,7 +63,7 @@ Program firstTouch_lab
      idbl = dble(i)
      compare = (c(i) - 6.0d0 * idbl *idbl)/c(i)
      compare = dabs(compare)
-     if ( compare .lt. 1.0D-14 ) then
+     if ( compare .gt. 1.0D-14 ) then
         pass = .false.
         print *, "Fail for i=", i, " we have c(i)=", c(i)
      endif
