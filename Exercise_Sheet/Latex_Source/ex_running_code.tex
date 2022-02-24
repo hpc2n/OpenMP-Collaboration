@@ -26,7 +26,7 @@ gcc -O3 -march=native -fopenmp -o code_exe code.c -lm      #OpenMP aware code
 
 \begin{verbatim}
 ml purge
-module load intel/2020a
+module load intel/2020b
 
 # Fortran
 ifort -O3 -xHost -o code_serial_exe  code.f90     #Serial code
@@ -37,7 +37,7 @@ icc -O3 -xHost -o code_serial_exe  code.c -lm        #Serial code
 icc -qopenmp -O3 -xHost -o code_exe  code.c -lm      #OpenMP aware code
 \end{verbatim}
 
-Notice that we can compile the code with optimization flags such as "-O3 -march=native -xHost". 
+Notice that we can compile the code with optimization flags such as ``-O3 -march=native" in case of a GCC compiler or  ``-O3 -xHost" in case of an Intel compiler. 
 We can set the number of threads to  execute our code with an environment variable
 for the OpenMP aware code:
 
