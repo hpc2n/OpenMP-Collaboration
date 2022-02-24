@@ -1,0 +1,30 @@
+\subsection{Exercise: OpenMP tasks}
+
+
+\subsubsection{Prepare your serial code}
+Take your serial code from exercise~\ref{triangularSumExercise} and modify it:
+\begin{quote}
+Define a block size $B$ and transform the loop implementing the sum over $i$ into two loops.  The outer on counting the blocks, while the inner the individual iterations.  The $M$ denotes the number of blocks, we have $B\cdot M= N$:
+\begin{equation}
+\lim_{h\to0}\lim_{N\to\infty}\left[
+8\sum_{b=0}^{M-1}\left[\sum_{i=b\,B}^{(b+1)B-1}\sum_{j=i+1}^{N-1}
+h^2 \exp\left(-h^2 (i^2 + j^2)
+\right)\right]\right]
+\end{equation}
+\end{quote}
+Confirm you are getting the same results as before.  
+\subsubsection{Parallelisation using tasks}
+We now want to parallelise the code using OpenMP tasks.  For each $b$ your code should create a task, which evaluates the two inner sums over $i$ and $j$. When parallelising your code, consider that:
+\begin{enumerate}
+\item Each task is created exactly once.
+\item A way to get a result back from the task is a shared variable.
+\item In OpenMP 4.5 there are no reductions for the task construct
+\item Updates to shared variables from a task are prone to data races and potentially costly if guards agains data races are put in - each task should update it's shared variable once.
+\item Make sure shared variables do not go out of scope before the last task has finished.
+\end{enumerate}
+\subsubsection{Performance}
+Check that your code speeds up when using more threads.  By changing the block size you can alter the number of tasks created.  If you use large block sizes your load balance will become poor.  
+
+\textbf{Remark:}
+OpenMP 4.5 introduced the \verb+taskloop+ construct, with which this exercise would be easier to parallelise.
+
