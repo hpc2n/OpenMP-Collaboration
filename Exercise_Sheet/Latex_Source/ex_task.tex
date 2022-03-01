@@ -13,17 +13,25 @@ h^2 \exp\left(-h^2 (i^2 + j^2)
 \end{equation}
 \end{quote}
 Confirm you are getting the same results as before.  
-\subsubsection{Parallelisation using tasks}
+\subsubsection{Parallelisation using tasks and returning the result utilising a shared variable}
+\label{task_parallel_shared}
 We now want to parallelise the code using OpenMP tasks.  For each $b$ your code should create a task, which evaluates the two inner sums over $i$ and $j$. When parallelising your code, consider that:
 \begin{enumerate}
 \item Each task is created exactly once.
 \item A way to get a result back from the task is a shared variable.
-\item In OpenMP 4.5 there are no reductions for the task construct
-\item Updates to shared variables from a task are prone to data races and potentially costly if guards agains data races are put in - each task should update it's shared variable once.
-\item Make sure shared variables do not go out of scope before the last task has finished.
+\begin{enumerate}
+	\item Updates to shared variables need to be protected against data races (e.g.~\verb+atomic+, \verb+critical+)
+	\item The constructs used for this protection consume quite a bit of time, use them only once per task.
+\item Make sure shared variables do not go out of scope before the last task has finished.	
+\end{enumerate}
+\item Reductions for task constructs are part of OpenMP 5.0 and are discussed in exercise part \ref{taskreduction}. 
 \end{enumerate}
 \subsubsection{Performance}
 Check that your code speeds up when using more threads.  By changing the block size you can alter the number of tasks created.  If you use large block sizes your load balance will become poor.  
+\subsubsection{Using reduction constructs for tasks}\label{taskreduction}
+Take a copy of your code for exercise~\ref{task_parallel_shared} and use reduction constructs such as \verb+task_reduction+ and \verb+in_reduction+ to obtain your result.  When doing so your will most likely need a \verb+task_group+ as well.
+
+Which code performs better?   The one using a shared variable or the one with the reduction construct?
 
 \textbf{Remark:}
 OpenMP 4.5 introduced the \verb+taskloop+ construct, with which this exercise would be easier to parallelise.
