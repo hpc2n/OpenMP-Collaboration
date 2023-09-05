@@ -1,0 +1,72 @@
+\documentclass[a4paper,oneside,12pt]{article}
+
+\usepackage{url}
+\usepackage[english]{babel}
+
+\setlength\topmargin{-0.4in}
+\setlength\headheight{0.3in}
+\setlength\headsep{0.1in}
+\setlength\textheight{9.69in}
+\setlength\textwidth{6.27in}
+\setlength\oddsidemargin{0.0in}
+\setlength\evensidemargin{0.0in}
+\setlength\parindent{0.0in}
+\setlength\parskip{4.0pt}
+
+\begin{document}
+
+\thispagestyle{empty}
+
+\begin{center}
+  \underline{\large \bf Exercise sheet}\\\vspace{0.7cm}
+  {\Large \bf ``Shared Memory Programming With OpenMP''}\\[2ex]
+  {\Large Authors: Joachim Hein, Pedro Ojeda May\\[2ex]  2021, 2022, 2023}
+  \vspace{0.5cm}
+\end{center}
+
+\section*{General remarks: parallel performance assessment}
+
+In many exercises we ask for performance assessment.  For that you need to put timers into the code, as shown in the lectures.  However it is often not easy to get stable and reproducible results.
+
+A few general remarks:
+\begin{itemize}
+\item Avoid hardware shared between a number of users  
+\begin{itemize}
+\item In particular front-end nodes of a cluster are simultaneously used by a number of users.  This results in a variable background workload on the node, which has a strong influence on the performance of any application running on the nodes.  In particular for testing parallel performance results obtained on the front-end show large variations and are typically worthless.  Most HPC centres actually regard testing of parallel codes on front-end nodes as abuse.  Parallel tests utilise many or all the cores of the front end system and impede on other users.
+\item The cores of a compute node are not truly independent - this will be discussed in detail throughout the course.  While shared nodes are ok for correctness checking and many production situations, they are problematic regarding performance testing.  For the slurm scheduler the line
+\begin{verbatim}
+  #SBATCH --exclusive
+\end{verbatim}
+in the header of the submission script gives you exclusive access to a node.  You should use this with consideration for the other course participants.  This will charge you for all the cores assigned to the job, whether or not you use them.
+\end{itemize}
+\item To get stable and reproducible results you might need to place a loop inside the code that runs the timing section many times.  This smoothes over a lot of the operational noise typical for a UNIX system.  
+
+\item If you are timing code sections in the micro-second range, you should place your timers outside that loop.  The starting timer directly before and the stopping timer directly after the loop. 
+\item Use thread binding, that also reduces the effect operational noise has on your code.  Be aware that the map of your binding will affect the timing, but this way you get at least results for a situation you understand instead of something that is all-over-the-place.
+\item Experiment with the problem size.  OpenMP calls carry a significant overhead.  You need enough computational work between the OpenMP directives to get a benefit from the parallelisation. \textbf{However:} Correctness tests and debugging is best performed on small problem sizes.
+\end{itemize}
+
+\section*{Important practicality:}
+\textit{Keep copies of all solutions, including serial codes developed prior to starting the parallelisation.  You may need them as starting point for later exercises.}
+
+\pagebreak
+\section{First Day}
+\input{ex_running_code}
+\input{ex_hello_world_code}
+
+\pagebreak
+\section{Second Day}
+\input{ex_pi_atomic}
+\input{ex_workshare_schedule}
+
+\pagebreak
+\section{Third Day}
+\input{ex_reduction}
+\input{ex_task}
+
+\pagebreak
+\section{Fourth Day}
+\input{ex_nowait_orphan}
+\input{ex_first_touch}
+
+\end{document}
