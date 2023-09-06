@@ -53,19 +53,19 @@ batch job looks like this:
 
 \begin{verbatim}
 #!/bin/bash
-#SBATCH -A SNIC2022-22-140      # you have one for this course
-#SBATCH -t 00:03:00             # time the code will take
-#SBATCH -c 2                    # number of cpus requested
-#SBATCH -J data_process         # name of job
-#SBATCH -o process_omp_%j.out   # output file
-#SBATCH -e process_omp_%j.err   # error messages
-#SBATCH --reservation=openmp-course-dayX  #reservation change X for the day
+#SBATCH -A lu2023-7-61                  # you have one for this course
+#SBATCH -t 00:03:00                     # time the code will take
+#SBATCH -c 2                            # number of cpus requested
+#SBATCH -J data_process                 # name of job
+#SBATCH -o process_omp_%j.out           # output file
+#SBATCH -e process_omp_%j.err           # error messages
+#SBATCH --reservation=lu2023-7-61_dayX  # reservation change X for the day
 
-cat $0                          # it will log this script
+cat $0                                  # it will log this script
 
 ml purge  > /dev/null 2>&1 
-#module load foss/2020b         # choosing GNU compilers
-#module load intel/2020b        # choosing Intel compilers
+module load GCC/11.3.0                      # choosing GNU compilers
+#module load intel-compilers/2022.1.0       # choosing Intel compilers
 
 export OMP_NUM_THREADS=$SLURM_CPUS_PER_TASK # setting nr. threads
 
@@ -85,6 +85,4 @@ in the folder (modify it to set the project ID, the number of cores you want,
 the time, and the reservation queue).
 \item submit the job to the queue with the command: \verb+sbatch job.sh+, this will output
 a number which is the "job ID"
-\item the command \verb+job-usage job_ID+ on the Kebnekaise terminal will give you an URL
-which you can copy/paste on your local browser to monitor the CPU/Memory usage of your code
 \end{enumerate}
