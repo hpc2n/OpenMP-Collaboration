@@ -32,7 +32,7 @@ A few general remarks:
 \begin{itemize}
 \item Avoid hardware shared between a number of users  
 \begin{itemize}
-\item In particular front-end nodes of the SNIC clusters are used simultaneously by a number of users and some users abuse them.  In particular for testing parallel performance results obtained on the front-end show large variations and are typically worthless.  Most SNIC centres actually regard testing of parallel codes on front-end nodes as abuse.  Parallel tests use all the cores of the front end system and impede on other users.
+\item In particular front-end nodes of the NAISS clusters are used simultaneously by a number of users and some users abuse them.  In particular for testing parallel performance results obtained on the front-end show large variations and are typically worthless.  Most NAISS centres actually regard testing of parallel codes on front-end nodes as abuse.  Parallel tests use all the cores of the front end system and impede on other users.
 \item The cores of a compute node are not truly independent - this will be discussed in detail throughout the course.  While shared nodes are ok for correctness checking and many production situations, they are problematic regarding performance testing.  For the slurm scheduler the line
 \begin{verbatim}
   #SBATCH --exclusive
