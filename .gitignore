@@ -3,3 +3,5 @@
 *.log
 *.aux
 *.synctex.gz
+./Exercise_Sheet/*.log
+./Exercise_Sheet/*.aux
