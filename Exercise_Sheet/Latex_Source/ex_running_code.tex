@@ -12,7 +12,7 @@ Now, we can compile our code with the compiler we choose:
 
 \begin{verbatim}
 ml purge
-module load foss/2020b
+module load GCC/11.3.0
 # Fortran
 gfortran -O3 -march=native -o code_serial_exe code.f90     #Serial code
 gfortran -O3 -march=native -fopenmp -o code_exe code.f90   #OpenMP aware code
@@ -26,18 +26,18 @@ gcc -O3 -march=native -fopenmp -o code_exe code.c -lm      #OpenMP aware code
 
 \begin{verbatim}
 ml purge
-module load intel/2020b
+module load intel-compilers/2022.1.0 
 
 # Fortran
-ifort -O3 -xHost -o code_serial_exe  code.f90     #Serial code
-ifort -qopenmp -O3 -xHost -o code_exe  code.f90   #OpenMP aware code
+ifort -O3 -march=core-avx2  -o code_serial_exe  code.f90     #Serial code
+ifort -qopenmp -O3 -march=core-avx2 -o code_exe  code.f90   #OpenMP aware code
 
 # C
-icc -O3 -xHost -o code_serial_exe  code.c -lm        #Serial code
-icc -qopenmp -O3 -xHost -o code_exe  code.c -lm      #OpenMP aware code
+icc -O3 -march=core-avx2 -o code_serial_exe  code.c -lm        #Serial code
+icc -qopenmp -O3 -march=core-avx2 -o code_exe  code.c -lm      #OpenMP aware code
 \end{verbatim}
 
-Notice that we can compile the code with optimization flags such as ``-O3 -march=native" in case of a GCC compiler or  ``-O3 -xHost" in case of an Intel compiler. 
+Notice that we can compile the code with optimisation flags such as \verb+-O3 -march=native+ in case of a GCC compiler.  On COSMOS the standard \verb+-xHost+ of the Intel compiler will not result in efficient code, since COSMOS features AMD processors.   In this case it is typically advantageous to explicitly specify the instruction set of the deployed processor.  In case of COSMOS this is accomplished by using the option \verb+-march=core-avx2+.  
 We can set the number of threads to  execute our code with an environment variable
 for the OpenMP aware code:
 
