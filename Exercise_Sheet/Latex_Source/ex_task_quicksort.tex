@@ -7,13 +7,13 @@ Sorting data with respect to size is a well known problem in computing.  A naive
 For this assignment you get a tarball with a Fortran and a C source of a program which sorts a random array which you may use as a starting point for your assignment.   The programs implement the Lomuto partition scheme.  The codes have been tested and appear to be working when using the GCC 11.3.0 compiler.   The C code uses the random number generator from the GSL library.  Hint: to link against the GSL libray, you need to load the GSL module and add \verb+-lgsl -lgslcblas+ to the link line.
 
 \subsubsection{Serial code}
-Write your own implementation of quick sort or use either of the serial sources provided. The code always uses the same pseudo random numbers to initialise the working array.  Make sure you got an idea how the algorthim works.  Make sure you can compile, link and run the code on LUNARC's Aurora system.  You need to outline the basic ideas of the program in your hand-in. 
+Write your own implementation of quick sort or use either of the serial sources provided. The code always uses the same pseudo random numbers to initialise the working array.  Make sure you got an idea how the algorthim works.  Make sure you can compile, link and run the code.  
 
 \subsubsection{OpenMP parallelisation}
 You should parallelise the sorting using OpenMP. Looking into the \verb+task+ construct should give you an idea how quicksort could be parallelised.
 \begin{itemize}
 \item Check that your results do not change when you use different thread numbers.
-\item Measure the performance.  Are you achieving good parallel speed up when using multiple threads?  Run your program using 1, 2, 4, 8, 12, 24 threads on Cosmos  
+\item Measure the performance.  Are you achieving good parallel speed up when using multiple threads?  Run your program using 1, 2, 4, 8, 12, 24 threads on COSMOS.  
 \end{itemize}
 
 \subsubsection{Performance}
